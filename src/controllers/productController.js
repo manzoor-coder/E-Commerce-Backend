@@ -7,16 +7,22 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const createProduct = asyncHandler(async (req, res) => {
     console.log("req body", req.body);
-    const { name, price, description, images, category, brand, stock, rating, createdBy } = req.body;
+    const { name, price, description, category, brand, stock, rating } = req.body;
 
-    if (!name || !price || !description || !images || !category || !brand || !stock || !rating || !createdBy) {
+    const images = req.files?.images || [];
+    console.log("images", images);
+
+    if (!name || !price || !description || !category || !brand || !stock || !rating) {
         throw new ApiError(400, "All fields are required");
     }
 
+    const imagesPath = images.map(image => image.path);
+    console.log("imagesPath", imagesPath);
+
     let imagesUrl = [];
-    if (req.files && Array.isArray(req.files.images) && req.files.images.length > 0) {
-        for (const image of req.files.images) {
-            const imageUrl = await uploadOnCloudinary(image.path);
+    if (images && Array.isArray(images) && images.length > 0) {
+        for (const image of imagesPath) {
+            const imageUrl = await uploadOnCloudinary(image);
             imagesUrl.push(imageUrl.url);
         }
     }
