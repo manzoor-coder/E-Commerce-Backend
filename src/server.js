@@ -4,6 +4,7 @@ import cors from 'cors';
 import connectDB from './db/db.js';
 import routes from './routes/index.js';
 import cartRoutes from './routes/cart.routes.js';
+import orderRoutes from "./routes/order.routes.js"
 
 dotenv.config();
 console.log("MONGO_URI from .env =>", process.env.MONGO_URI);
@@ -15,6 +16,7 @@ app.use(express.json());
 // Routes 
 app.use('/api', routes)
 app.use("/api/cart", cartRoutes);
+app.use("/api/orders", orderRoutes)
 
 const PORT = process.env.PORT || 8080;
 
