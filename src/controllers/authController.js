@@ -143,4 +143,51 @@ const loginUser = asyncHandler(async (req, res) => {
     );
 });
 
-export {loginUser, registerUser}
+
+// ✅ Admin: Get all users
+const getAllUsers = asyncHandler(async (req, res) => {
+  const users = await User.find({}).select("-password");
+  res.status(200).json(new ApiResponse(200, users, "All users fetched successfully"));
+});
+
+// ✅ Admin: Get single user by ID
+const getUserById = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id).select("-password");
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  res.status(200).json(new ApiResponse(200, user, "User fetched successfully"));
+});
+
+// ✅ Admin: Update user (role, name, email)
+const updateUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  user.name = req.body.name || user.name;
+  user.email = req.body.email || user.email;
+  user.role = req.body.role || user.role; // 👈 role update (user/admin)
+
+  const updatedUser = await user.save();
+  res.status(200).json(new ApiResponse(200, updatedUser, "User updated successfully"));
+});
+
+// ✅ Admin: Delete user
+const deleteUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  await user.deleteOne();
+  res.status(200).json(new ApiResponse(200, {}, "User deleted successfully"));
+});
+
+
+export {loginUser, registerUser, getAllUsers, getUserById, updateUser, deleteUser}
