@@ -9,6 +9,7 @@ import paymentRoutes from './routes/payment.routes.js'
 import adminRoutes from './routes/admin.routes.js'
 import wishlistRoutes from './routes/wishlist.routes.js'
 import reviewRoutes from "./routes/review.routes.js"
+import couponRoutes from "./routes/coupon.routes.js";
 
 dotenv.config();
 console.log("MONGO_URI from .env =>", process.env.MONGO_URI);
@@ -29,6 +30,9 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 
 app.use("/api/reviews", reviewRoutes);
+
+// coupon routes
+app.use("/api/coupons", couponRoutes);
 
 const PORT = process.env.PORT || 8080;
 
